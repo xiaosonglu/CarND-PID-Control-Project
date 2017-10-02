@@ -34,6 +34,16 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
+  
+  // Reflection: First set Ki and Kd to zero and increase Kp.
+  // After simulating with different values for Kp, choose Kp = 0.1 when  
+  // observing the start of the oscillation. Then set Kp = 0.1 and 
+  // try different values for Kd. By choosing Kd = 50, it seems the 
+  // overshoot is largely compensated. Finally, try different values of Ki
+  // and find that the value Ki = 0.001 is able to compensate the bias and keep
+  // the vehicle further away from the ledges.   
+  
+  pid.Init(0.1,0.001,50);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -58,9 +68,21 @@ int main()
           * another PID controller to control the speed!
           */
           
+          // Get the updated controller parameters 
+          pid.UpdateError(cte);
+          
+          // Calcule the steer value using PID controller
+          steer_value = -pid.Kp * cte - pid.Kd* pid.d_error - pid.Ki * pid.i_error;
+          
+          // Limit the steer value to be within [-1, 1]
+          if (steer_value > 1) steer_value = 1;
+          if (steer_value < -1) steer_value = -1;
+          
+          // Store the previous cte value for computing d_error
+          pid.d_error = cte;
+          
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
-
           json msgJson;
           msgJson["steering_angle"] = steer_value;
           msgJson["throttle"] = 0.3;
