@@ -34,15 +34,6 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
-  
-  // Reflection: First set Ki and Kd to zero and increase Kp.
-  // After simulating with different values for Kp, choose Kp = 0.1 when  
-  // observing the start of the oscillation. Then set Kp = 0.1 and 
-  // try different values for Kd. By choosing Kd = 50, it seems the 
-  // overshoot is largely compensated. Finally, try different values of Ki
-  // and find that the value Ki = 0.001 is able to compensate the bias and keep
-  // the vehicle further away from the ledges.   
-  
   pid.Init(0.1,0.001,50);
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {

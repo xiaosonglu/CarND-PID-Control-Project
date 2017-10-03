@@ -2,6 +2,14 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## Reflection 
+* Describe the effect each of the P, I, D components had in your implementation:
+  * P component: help to reach the desired trajectory but causing overshoots with a high gain.
+  * I component: help to compensate the bias.
+  * D component: help to counter steers to eliminate overshoots caused by the P component.
+
+* Describe how the final hyperparameters were chosen:
+  * The parameters are chosen through manual tuning. First set Ki and Kd to zero and increase Kp. After simulating with different values for Kp, choose Kp = 0.1 when observing the oscillation. Then set Kp = 0.1 and try different values for Kd. By choosing Kd = 50, it seems the overshoot is largely eliminated. Finally, try different values of Ki and find that the value Ki = 0.001 is able to compensate the bias and keep the vehicle further away from the ledges.
 
 ## Dependencies
 
